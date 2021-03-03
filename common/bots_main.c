@@ -275,7 +275,7 @@ void
 bots_get_params_common(int argc, char **argv)
 {
    int i;
-   strcpy(bots_execname, basename(argv[0]));
+   strcpy(bots_execname, argv[0]);
    bots_get_date(bots_exec_date);
    strcpy(bots_exec_message,"");
    for (i=1; i<argc; i++) 
