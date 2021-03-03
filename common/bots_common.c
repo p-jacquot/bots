@@ -24,7 +24,6 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
-#include <sys/utsname.h>
 #include <sys/resource.h>
 
 #include "bots_common.h"
@@ -90,15 +89,6 @@ bots_get_date(char *str)
    strftime(str, 32, "%Y/%m/%d;%H:%M", gmtime(&now));
 }
 
-void bots_get_architecture(char *str)
-{
-   int ncpus = sysconf(_SC_NPROCESSORS_CONF);
-   struct utsname architecture;
-
-   uname(&architecture);
-   snprintf(str, BOTS_TMP_STR_SZ, "%s-%s;%d" ,architecture.sysname, architecture.machine, ncpus);
-}
-
 #if defined (__linux)
 /* ****************************************************************** */
 void bots_get_load_average(char *str)
@@ -126,7 +116,7 @@ void bots_print_results()
    char str_number_of_tasks_per_second[15];
    char str_exec_date[BOTS_TMP_STR_SZ];
    char str_exec_message[BOTS_TMP_STR_SZ];
-   char str_architecture[BOTS_TMP_STR_SZ];
+   char * str_architecture = "REMOVED FOR COMPILATION PURPOSE";
    char str_load_avg[BOTS_TMP_STR_SZ];
    char str_comp_date[BOTS_TMP_STR_SZ];
    char str_comp_message[BOTS_TMP_STR_SZ];
@@ -172,7 +162,6 @@ void bots_print_results()
 
    sprintf(str_exec_date, "%s", bots_exec_date);
    sprintf(str_exec_message, "%s", bots_exec_message);
-   bots_get_architecture(str_architecture);
    bots_get_load_average(str_load_avg);
    sprintf(str_comp_date, "%s", bots_comp_date);
    sprintf(str_comp_message, "%s", bots_comp_message);
