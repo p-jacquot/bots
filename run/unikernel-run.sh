@@ -23,5 +23,9 @@ echo -e "Performing bench $bench :"
 
 for executable in $bench.*; do
     echo -e "\t Executing $executable..."
-    "$unikernel_launch" $executable $bench_args > $results_path/$executable.log
+    if [ "$unikernel_launch" == "./" ]; then
+        ./$executable $bench_args > $results_path/$executable.log
+    else
+        "$unikernel_launch" $executable $bench_args > $results_path/$executable.log
+    fi
 done
