@@ -1,8 +1,9 @@
 #! /bin/bash
 
-unikernel_launch=$1
-bench=$2
-bench_args=$3
+unikernel=$1
+unikernel_dir=$2
+bench=$3
+bench_args=$4
 
 if [ ! -e results ]; then
     mkdir results
@@ -23,9 +24,26 @@ echo -e "Performing bench $bench :"
 
 for executable in $bench.*; do
     echo -e "\t Executing $executable..."
-    if [ "$unikernel_launch" == "./" ]; then
-        ./$executable $bench_args > $results_path/$executable.log
-    else
-        "$unikernel_launch" $executable $bench_args > $results_path/$executable.log
-    fi
+    log_file="$results_path/$executable.log"
+    case "$unikernel" in
+        "./")
+            ./$executable $bench_args > $log_file
+            ;;
+
+        "hermitux")
+            HERMIT_ISLE=uhyve HERMIT_TUX=1 \
+                $unikernel_dir/hermitux-kernel/prefix/bin/proxy \
+                $unikernel_dir/hermitux-kernel/prefix/x86_64-hermit/extra/tests/hermitux \
+                $executable $bench_args > $log_file 
+            ;;
+
+        "hermitcore")
+            $unikernel_dir/bin/proxy $executable $bench_args > $log_file
+            ;;
+
+        *)
+            echo -e "Unknown unikernel : $unikernel"
+            ;;
+    esac
+
 done
