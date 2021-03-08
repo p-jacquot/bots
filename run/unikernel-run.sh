@@ -23,7 +23,6 @@ cd ../bin
 echo -e "Performing bench $bench :"
 
 for executable in $bench.*; do
-    #echo -e "\t Executing $executable..."
     log_file="$results_path/$executable.log"
     touch $log_file
     for ((i = 0; i < 10; i++)); do

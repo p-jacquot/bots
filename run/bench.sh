@@ -35,3 +35,15 @@ mkdir results
 ./unikernel-run.sh $unikernel $unikernel_dir nqueens
 ./unikernel-run.sh $unikernel $unikernel_dir sparselu
 ./unikernel-run.sh $unikernel $unikernel_dir strassen
+
+cd ./results
+folders=`ls`
+touch times.csv
+
+for name in $folders; do
+    for bench in $name/*; do
+        echo "$bench;" >> times.csv
+        cat $bench | grep "Time Program" \
+            | awk '{print $4 ";"}' >> times.csv
+    done
+done
