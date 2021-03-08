@@ -2,6 +2,11 @@
 
 unikernel=$1
 unikernel_dir=$2
+cpus=1
+
+if [ -n "$3" ]; then
+    cpus=$3
+fi
 
 case $unikernel in
     "hermitux")
@@ -18,32 +23,47 @@ case $unikernel in
 
     *)
         echo -e "Unknown unikernel $unikernel.\n Aborting script."
+        exit
         ;;
 esac
 
-if [ -e results ]; then
+if [ -e cpus-results ]; then
     echo -e "Warning : A directory results already exists !"
     echo -e "Please remove it manually to avoid making mistakes."
     echo -e "Aborting script."
     exit
 fi
 
-mkdir results
+mkdir cpus-results
 
-./unikernel-run.sh $unikernel $unikernel_dir fib
-./unikernel-run.sh $unikernel $unikernel_dir health "-f ../inputs/health/medium.input"
-./unikernel-run.sh $unikernel $unikernel_dir nqueens
-./unikernel-run.sh $unikernel $unikernel_dir sparselu
-./unikernel-run.sh $unikernel $unikernel_dir strassen
+for cpu in $cpus; do
+    
+    mkdir results
 
-cd ./results
-folders=`ls`
-touch times.csv
+    export HERMIT_CPUS=$cpu
+    export OMP_NUM_THREADS=$cpu
+    
+    echo -e "Starting benchs with $cpu cores."
 
-for name in $folders; do
-    for bench in $name/*; do
-        echo "$bench;" >> times.csv
-        cat $bench | grep "Time Program" \
-            | awk '{print $4 ";"}' >> times.csv
+    ./unikernel-run.sh $unikernel $unikernel_dir fib
+    #./unikernel-run.sh $unikernel $unikernel_dir health "-f ../inputs/health/medium.input"
+    #./unikernel-run.sh $unikernel $unikernel_dir nqueens
+    #./unikernel-run.sh $unikernel $unikernel_dir sparselu
+    #./unikernel-run.sh $unikernel $unikernel_dir strassen
+    
+    cd ./results
+    folders=`ls`
+    touch times.csv
+
+    for name in $folders; do
+        for bench in $name/*; do
+            echo "$bench;" >> times.csv
+            cat $bench | grep "Time Program" \
+                | awk '{print $4 ";"}' >> times.csv
+        done
     done
+    
+    cd ..
+    mv results cpus-results/$cpu-cpus
 done
+

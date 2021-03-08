@@ -3,3 +3,4 @@ bin/*
 config/make.config
 bots-*.tar.gz
 run/results
+run/cpus-results
