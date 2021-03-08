@@ -23,27 +23,31 @@ cd ../bin
 echo -e "Performing bench $bench :"
 
 for executable in $bench.*; do
-    echo -e "\t Executing $executable..."
+    #echo -e "\t Executing $executable..."
     log_file="$results_path/$executable.log"
-    case "$unikernel" in
-        "./")
-            ./$executable $bench_args > $log_file
-            ;;
+    touch $log_file
+    for ((i = 0; i < 10; i++)); do
+        echo -e -n "\r\t Executing $executable : $i..."
+        case "$unikernel" in
+            "./")
+                ./$executable $bench_args >> $log_file
+                ;;
 
-        "hermitux")
-            HERMIT_ISLE=uhyve HERMIT_TUX=1 \
-                $unikernel_dir/hermitux-kernel/prefix/bin/proxy \
-                $unikernel_dir/hermitux-kernel/prefix/x86_64-hermit/extra/tests/hermitux \
-                $executable $bench_args > $log_file 
-            ;;
+            "hermitux")
+                HERMIT_ISLE=uhyve HERMIT_TUX=1 \
+                    $unikernel_dir/hermitux-kernel/prefix/bin/proxy \
+                    $unikernel_dir/hermitux-kernel/prefix/x86_64-hermit/extra/tests/hermitux \
+                    $executable $bench_args >> $log_file 
+                ;;
 
-        "hermitcore")
-            $unikernel_dir/bin/proxy $executable $bench_args > $log_file
-            ;;
+            "hermitcore")
+                $unikernel_dir/bin/proxy $executable $bench_args >> $log_file
+                ;;
 
-        *)
-            echo -e "Unknown unikernel : $unikernel"
-            ;;
-    esac
-
+            *)
+                echo -e "Unknown unikernel : $unikernel"
+                ;;
+        esac
+    done
+    echo 
 done
