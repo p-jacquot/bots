@@ -46,10 +46,10 @@ for cpu in $cpus; do
     echo -e "Starting benchs with $cpu cores."
 
     ./unikernel-run.sh $unikernel $unikernel_dir fib
-    ./unikernel-run.sh $unikernel $unikernel_dir health "-f ../inputs/health/medium.input"
-    ./unikernel-run.sh $unikernel $unikernel_dir nqueens
-    ./unikernel-run.sh $unikernel $unikernel_dir sparselu
-    ./unikernel-run.sh $unikernel $unikernel_dir strassen
+    #./unikernel-run.sh $unikernel $unikernel_dir health "-f ../inputs/health/medium.input"
+    #./unikernel-run.sh $unikernel $unikernel_dir nqueens
+    #./unikernel-run.sh $unikernel $unikernel_dir sparselu
+    #./unikernel-run.sh $unikernel $unikernel_dir strassen
     
     cd ./results
     folders=`ls`
@@ -57,12 +57,18 @@ for cpu in $cpus; do
 
     for name in $folders; do
         for bench in $name/*; do
-            echo "$bench;" >> times.csv
             cat $bench | grep "Time Program" \
-                | awk '{print $4 ";"}' >> times.csv
+                | awk '{print $4}' > tmp
+            
+            echo -n "$bench;" >> times.csv
+            cat tmp | while read line; do
+                echo -n "$line;" >> times.csv
+            done
+            echo >> times.csv
         done
     done
     
+    rm tmp
     cd ..
     mv results cpus-results/$cpu-cpus
 done
