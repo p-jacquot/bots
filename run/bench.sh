@@ -46,10 +46,10 @@ for cpu in $cpus; do
     echo -e "Starting benchs with $cpu cores."
 
     ./unikernel-run.sh $unikernel $unikernel_dir fib
-    #./unikernel-run.sh $unikernel $unikernel_dir health "-f ../inputs/health/medium.input"
-    #./unikernel-run.sh $unikernel $unikernel_dir nqueens
-    #./unikernel-run.sh $unikernel $unikernel_dir sparselu
-    #./unikernel-run.sh $unikernel $unikernel_dir strassen
+    ./unikernel-run.sh $unikernel $unikernel_dir health "-f ../inputs/health/medium.input"
+    ./unikernel-run.sh $unikernel $unikernel_dir nqueens
+    ./unikernel-run.sh $unikernel $unikernel_dir sparselu
+    ./unikernel-run.sh $unikernel $unikernel_dir strassen
     
     cd ./results
     folders=`ls`
