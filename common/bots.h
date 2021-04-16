@@ -64,6 +64,7 @@ extern int bots_arg_size_2;
 
 /* function could be used in app. code but are implemented in bots_common.c */
 long bots_usecs();
+double bots_clocktime();
 void bots_error(int error, char *message);
 void bots_warning(int warning, char *message);
 

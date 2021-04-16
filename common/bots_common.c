@@ -81,6 +81,13 @@ long bots_usecs (void)
    return t.tv_sec*1000000+t.tv_usec;
 }
 
+double bots_clocktime(void)
+{
+   struct timespec t;
+   clock_gettime(CLOCK_MONOTONIC, &t);
+   return (double)(t.tv_sec + t.tv_nsec / 1000000000.0);
+}
+
 void
 bots_get_date(char *str)
 {

@@ -477,8 +477,8 @@ int
 main(int argc, char* argv[])
 {
 #ifndef BOTS_APP_SELF_TIMING
-   long bots_t_start;
-   long bots_t_end;
+   double bots_t_start;
+   double bots_t_end;
 #endif
 
    bots_get_params(argc,argv);
@@ -497,10 +497,10 @@ main(int argc, char* argv[])
 #ifdef BOTS_APP_SELF_TIMING
       bots_time_sequential = KERNEL_SEQ_CALL;
 #else
-      bots_t_start = bots_usecs();
+      bots_t_start = bots_clocktime();
       KERNEL_SEQ_CALL;
-      bots_t_end = bots_usecs();
-      bots_time_sequential = ((double)(bots_t_end-bots_t_start))/1000000;
+      bots_t_end = bots_clocktime();
+      bots_time_sequential = (bots_t_end-bots_t_start);
 #endif
       KERNEL_SEQ_FINI;
    }
@@ -510,10 +510,10 @@ main(int argc, char* argv[])
 #ifdef BOTS_APP_SELF_TIMING
    bots_time_program = KERNEL_CALL;
 #else
-   bots_t_start = bots_usecs();
+   bots_t_start = bots_clocktime();
    KERNEL_CALL;
-   bots_t_end = bots_usecs();
-   bots_time_program = ((double)(bots_t_end-bots_t_start))/1000000;
+   bots_t_end = bots_clocktime();
+   bots_time_program = (bots_t_end-bots_t_start);
 #endif
    KERNEL_FINI;
 
