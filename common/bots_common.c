@@ -81,12 +81,24 @@ long bots_usecs (void)
    return t.tv_sec*1000000+t.tv_usec;
 }
 
-double bots_clocktime(void)
+#ifndef NO_GETTIMEOFDAY
+
+double bots_secs(void)
+{
+    struct timeval t;
+    gettimeofday(&t, NULL);
+    return t.tv_sec + t.tv_usec / 1000000;
+}
+
+#else
+double bots_secs(void)
 {
    struct timespec t;
    clock_gettime(CLOCK_MONOTONIC, &t);
    return (double)(t.tv_sec + t.tv_nsec / 1000000000.0);
 }
+
+#endif // ifndef NO_GETTIMEOFDAY
 
 void
 bots_get_date(char *str)
