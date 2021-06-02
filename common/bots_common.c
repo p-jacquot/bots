@@ -87,7 +87,7 @@ double bots_secs(void)
 {
     struct timeval t;
     gettimeofday(&t, NULL);
-    return t.tv_sec + t.tv_usec / 1000000;
+    return (double)(t.tv_sec + (double)(t.tv_usec / 1000000.));
 }
 
 #else
